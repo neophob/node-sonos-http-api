@@ -8,7 +8,8 @@
     "url": "https://github.com/neophob/node-sonos-http-api.git"
   },
   "dependencies": {
-    "sonos-discovery": "git+https://github.com/jishi/node-sonos-discovery.git#master"
+    "sonos-discovery": "git+https://github.com/jishi/node-sonos-discovery.git#master",
+    "socket.io": "^1.0.6"
   },
   "engine": "node 0.10.x",
   "main": "lib/sonos-http-api.js"
