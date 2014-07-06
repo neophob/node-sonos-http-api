@@ -3,13 +3,11 @@ var SonosDiscovery = require('sonos-discovery');
 var SonosHttpAPI = require('./lib/sonos-http-api.js');
 var NotificationAPI = require('./lib/notification-service.js');
 var fs = require('fs');
+var conf = require('./conf');
+var log = require('./lib/log')('sonosserver');
 
 var discovery = new SonosDiscovery();
-var portRestInterface = 5005;
-var ipRestInterface = '0.0.0.0';
-var portNotificationInterface = 5006;
-
-var notificationApi = new NotificationAPI(portNotificationInterface);
+var notificationApi = new NotificationAPI(conf.get('socket.port'), log);
 
 var presets = {};
 var storedState = {};
@@ -17,11 +15,9 @@ var storedState = {};
 fs.exists('./presets.json', function (exists) {
 	if (exists) {
 		presets = require('./presets.json');
-		console.log('loaded presets', presets);
-	} else {
-		console.log('no preset file, ignoring...');
+    log.info('loaded presets', presets);
 	}
-  var sonosHttpAPI = new SonosHttpAPI(discovery, ipRestInterface, portRestInterface, presets);
+  var sonosHttpAPI = new SonosHttpAPI(discovery, conf.get('rest.ip'), conf.get('rest.port'), presets, log);
 
   setInterval(function() {
     discovery.getZones().forEach(function (zone) {
@@ -33,12 +29,20 @@ fs.exists('./presets.json', function (exists) {
         state.currentTrack.albumArtURI = albumUrl;
       }
       if (JSON.stringify(storedState) !== JSON.stringify(state)) {
-        console.log('send: '+state.currentTrack.title);
         storedState = JSON.parse(JSON.stringify(state));
         notificationApi.sendPlayerstateChangedNotification(state);
       }
     });
-  }, 250);
-
+  }, conf.get('polling.time'));
 });
 
+
+process.on('SIGHUP', function() {
+  log.info('SIGHUP, not implemented yet!');
+  //TODO maybe reparse process.env?
+});
+process.on('uncaughtException', function(err) {
+  log.error('uncaughtException detected! Exit application with Errorcode 1!');
+  log.error('Stacktrace: ' + err.stack);
+  process.exit(1);
+});

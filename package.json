@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "sonos-discovery": "git+https://github.com/jishi/node-sonos-discovery.git#master",
-    "socket.io": "^1.0.6"
+    "socket.io": "^1.0.6",
+    "winston": "^0.7.3"
   },
   "engine": "node 0.10.x",
   "main": "lib/sonos-http-api.js"
