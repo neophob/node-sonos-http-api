@@ -4,6 +4,8 @@ var fs = require('fs');
 
 function SonosApi(log) {
 
+  var pauseState = false;
+  var volume = 1;
   var dataState = {};
   var dataPlaylist = {};
   var dataZones = {};
@@ -47,6 +49,14 @@ function SonosApi(log) {
 
   function getPlayerState() {
     log.info('return state');
+    dataState.elapsedTime = new Date().getSeconds();
+    var pauseStateString = 'PLAYING';
+    if (pauseState) {
+      pauseStateString = 'PAUSED_PLAYBACK';
+    }
+    dataState.zoneState = pauseStateString;
+    dataState.playerState = pauseStateString;
+    dataState.volume = parseInt(volume, 10);
     return dataState;
   }
 
@@ -88,12 +98,20 @@ function SonosApi(log) {
 
     switch (options.action.toLowerCase()) {
       case 'play':
+        pauseState = false;
         break;
       case 'pause':
+        pauseState = true;
         break;
       case 'playpause':
+        if (pauseState) {
+          pauseState = false;
+        } else {
+          pauseState = true;
+        }
         break;
       case 'volume':
+        volume = options.value;
         break;
       case 'groupvolume':
         break;
