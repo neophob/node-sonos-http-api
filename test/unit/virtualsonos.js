@@ -26,6 +26,7 @@ describe('Check Sonos Virtual Device', function() {
 
       //THEN
       expect(result.currentTrack.albumArtURI).to.contain('http://'+ip+':'+port);
+      expect(result.currentTrack.albumArtURI).to.contain('cover');
     });
   });
 
@@ -136,6 +137,23 @@ describe('Check Sonos Virtual Device', function() {
         //THEN
         var result = JSON.stringify(reply.items);
         expect(result).to.contain('Jeff Pearce');
+      });
+    });
+  });
+
+  describe('get image', function() {
+    it('should return image cover1.jpg', function() {
+      //GIVEN
+      var ip = '1.2.3.4';
+      var port = 4444;
+      var sonosApi = new SonosApi(logger, ip, port);
+      var action = optionparser('/img/cover1.jpg');
+
+      //WHEN
+      sonosApi.handleAction(action, function(res, reply) {
+
+        //THEN
+        expect(reply.length).to.be.at.least(1000);
       });
     });
   });
