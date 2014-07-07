@@ -48,7 +48,7 @@ function configure() {
  */
 
 function Log(label) {
-  this.label = label || 'DUI';
+  this.label = label || 'Sonos';
 }
 
 /*

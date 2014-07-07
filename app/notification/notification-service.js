@@ -1,3 +1,4 @@
+'use strict';
 
 function NotificationApi(port, log) {
   var io = require('socket.io').listen(port);
@@ -13,7 +14,7 @@ function NotificationApi(port, log) {
 
   this.sendPlayerstateChangedNotification = function (data) {
     io.sockets.emit('playerstate', data);
-  }
+  };
 }
 
 module.exports = NotificationApi;

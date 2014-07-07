@@ -32,16 +32,14 @@ module.exports = function (grunt) {
       }
     },
     jshint: {
+      //hint: the sonos implementation is not checked!
       all: [
         'Gruntfile.js',
-        '<%= conf.app %>/server.js',
         '<%= conf.app %>/conf/*.js',
         '<%= conf.app %>/lib/*.js',
         '<%= conf.app %>/notification/*.js',
         '<%= conf.app %>/rest/**/*.js',
-        '<%= conf.app %>/sonos/*.js',
-        '<%= conf.test %>/*.js',
-        '<%= conf.test %>/**/*.js'
+        '<%= conf.app %>/virtual-sonos/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -49,14 +47,12 @@ module.exports = function (grunt) {
     },
 
     mochaTest: {
-      //run all tests on cli (integration and unit tests)
-      //used to: run all tests local (needs postgres)
       test: {
         options: {
           reporter: 'spec'
         },
-        src: ['<%= conf.test %>/integration/*/*.js',
-              '<%= conf.test %>/unit/*/*.js'
+        src: [
+              '<%= conf.test %>/unit/*.js'
              ]
       }
     },
@@ -117,7 +113,7 @@ module.exports = function (grunt) {
 
   });
 
-  grunt.registerTask('test', ['clean:test', 'env:test', 'jshint', 'mochaTest:test']);
+  grunt.registerTask('test', [ 'env:test', 'jshint', 'mochaTest:test']);
   grunt.registerTask('build', ['clean:dist', 'copy:dist']);
 
   grunt.registerTask('default', ['test', 'build']);

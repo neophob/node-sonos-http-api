@@ -17,26 +17,13 @@ function SonosApi(log, ip, port) {
   var coverimages = [];
   var assetPath = './assets/';
 
-  function loadFile(filename, callback) {
-    fs.readFile(assetPath + filename, 'utf8', function (err, data) {
-      if (err) {
-        log.error('Error: ' + err);
-        callback({});
-      }
-      callback(JSON.parse(data));
-    });
+  function loadJSONFile(filename) {
+    log.debug('load filename '+filename);
+    var data = fs.readFileSync(assetPath + filename, 'utf8');
+    return JSON.parse(data);
   }
 
-  loadFile('json/state.json', function(data) {
-    dataState = data;
-  });
-  loadFile('json/playlists.json', function(data) {
-    dataPlaylist = data;
-  });
-  loadFile('json/playlistsFV2.json', function(data) {
-    dataPlaylistFV2 = data;
-  });
-  loadFile('json/playlistsSQ1.json', function(data) {
+  function replaceAlbumArtUri(data) {
     var items = data.items;
     var nr = 0;
     for (var i in items) {
@@ -44,24 +31,18 @@ function SonosApi(log, ip, port) {
       items[i].albumArtURI = hostaddr + '/img/cover'+ofs+'.jpg';
       nr++;
     }
-    dataPlaylistSQ1 = data;
-  });
-  loadFile('json/playlistsSQ0.json', function(data) {
-    var items = data.items;
-    var nr = 0;
-    for (var i in items) {
-      var ofs = nr%3;
-      items[i].albumArtURI = hostaddr + '/img/cover'+ofs+'.jpg';
-      nr++;
-    }
-    dataPlaylistSQ0 = data;
-  });
-  loadFile('json/playlistsA.json', function(data) {
-    dataPlaylistA = data;
-  });
-  loadFile('json/zones.json', function(data) {
-    dataZones = data;
-  });
+  }
+
+  //synchronous read of required files...
+  dataState = loadJSONFile('json/state.json');
+  dataPlaylist = loadJSONFile('json/playlists.json');
+  dataPlaylistFV2 = loadJSONFile('json/playlistsFV2.json');
+  dataPlaylistSQ1 = loadJSONFile('json/playlistsSQ1.json');
+  replaceAlbumArtUri(dataPlaylistSQ1);
+  dataPlaylistSQ0 = loadJSONFile('json/playlistsSQ0.json');
+  replaceAlbumArtUri(dataPlaylistSQ0);
+  dataPlaylistA = loadJSONFile('json/playlistsA.json');
+  dataZones = loadJSONFile('json/zones.json');
 
   coverimages['cover0.jpg'] = fs.readFileSync(assetPath + 'img/cover0.jpg');
   coverimages['cover1.jpg'] = fs.readFileSync(assetPath + 'img/cover1.jpg');

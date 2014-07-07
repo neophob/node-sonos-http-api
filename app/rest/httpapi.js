@@ -1,14 +1,14 @@
 'use strict';
 
 var http = require('http');
+var optionparser = require('./optionparser');
 
 function HttpApi(sonosApi, listeningip, port, presets, log) {
 
   var server = http.createServer(function (req, res) {
-    var params = req.url.substring(1).split('/');
+    var opt = optionparser(req.url);
 
-    if (params.length < 1 || params[0] === 'favicon.ico') {
-      // This is faulty.
+    if (!opt.action) {
       res.writeHead(200, {
         'Content-Type': 'application/json;charset=utf8',
         'Cache-Control': 'no-cache',
@@ -16,26 +16,9 @@ function HttpApi(sonosApi, listeningip, port, presets, log) {
       });
       res.end();
       return;
-    } else if (params.length === 2 && ['preset', 'pauseall', 'resumeall', 'reindex'].some(function (i) { return params[0] === i; })) {
-      // Handle presets
-      var opt = {
-        action: params[0],
-        value: params[1]
-      };
-    } else if (params.length > 1) {
-      var opt = {
-        room: params[0],
-        action: params[1],
-        value: params[2]
-      };
-    } else {
-      // guessing zones
-      var opt = {
-        action: params[0]
-      }
     }
 
-    var response = sonosApi.handleAction(opt, function (response, img) {
+    sonosApi.handleAction(opt, function (response, img) {
       if (img) {
         res.writeHead(200, {'Content-Type': 'image/jpg' });
         res.end(img, 'binary');
