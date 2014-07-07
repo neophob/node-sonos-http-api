@@ -8,29 +8,50 @@ function SonosApi(log) {
   var volume = 1;
   var dataState = {};
   var dataPlaylist = {};
+  var dataPlaylistFV2 = {};
+  var dataPlaylistSQ1 = {};
+  var dataPlaylistSQ0 = {};
+  var dataPlaylistA = {};
   var dataZones = {};
   var assetPath = './assets/';
 
-  fs.readFile(assetPath + 'json/state.json', 'utf8', function (err, data) {
+  function loadFile(filename, callback) {
+    fs.readFile(assetPath + filename, 'utf8', function (err, data) {
+      if (err) {
+        log.error('Error: ' + err);
+        callback({});
+      }
+      callback(JSON.parse(data));
+    });
+  }
+
+  loadFile('json/state.json', function(data) {
+    dataState = data;
+  });
+/*  fs.readFile(assetPath + 'json/state.json', 'utf8', function (err, data) {
     if (err) {
       log.error('Error: ' + err);
       return;
     }
     dataState = JSON.parse(data);
+  });*/
+  loadFile('json/playlists.json', function(data) {
+    dataPlaylist = data;
   });
-  fs.readFile(assetPath + 'json/playlists.json', 'utf8', function (err, data) {
-    if (err) {
-      log.error('Error: ' + err);
-      return;
-    }
-    dataPlaylist = JSON.parse(data);
+  loadFile('json/playlistsFV2.json', function(data) {
+    dataPlaylistFV2 = data;
   });
-  fs.readFile(assetPath + 'json/zones.json', 'utf8', function (err, data) {
-    if (err) {
-      log.error('Error: ' + err);
-      return;
-    }
-    dataZones = JSON.parse(data);
+  loadFile('json/playlistsSQ1.json', function(data) {
+    dataPlaylistSQ1 = data;
+  });
+  loadFile('json/playlistsSQ0.json', function(data) {
+    dataPlaylistSQ0 = data;
+  });
+  loadFile('json/playlistsA.json', function(data) {
+    dataPlaylistA = data;
+  });
+  loadFile('json/zones.json', function(data) {
+    dataZones = data;
   });
 
   // This is to handle setTimeout
@@ -47,14 +68,30 @@ function SonosApi(log) {
 
   function browsePlaylist(id, callback) {
     log.info('browsePlaylist: '+id);
+    if (id === 'FV:2') {
+      callback(dataPlaylistFV2);
+      return;
+    } else
+    if (id === 'SQ:1') {
+      callback(dataPlaylistSQ1);
+      return;
+    } else
+    if (id === 'SQ:0') {
+      callback(dataPlaylistSQ0);
+      return;
+    } else
+    if (id === 'A:') {
+      callback(dataPlaylistA);
+      return;
+    }
     callback(dataPlaylist);
   }
 
   function getPlayerState() {
-    dataState.elapsedTime = new Date().getSeconds();
-    var pauseStateString = 'PLAYING';
-    if (pauseState) {
-      pauseStateString = 'PAUSED_PLAYBACK';
+    var pauseStateString = 'PAUSED_PLAYBACK';
+    if (!pauseState) {
+      pauseStateString = 'PLAYING';
+      dataState.elapsedTime = new Date().getSeconds();
     }
     dataState.zoneState = pauseStateString;
     dataState.playerState = pauseStateString;
