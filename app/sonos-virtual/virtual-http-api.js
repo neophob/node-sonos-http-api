@@ -35,20 +35,22 @@ function SonosApi(log) {
 
   // This is to handle setTimeout
   function pauseAll() {
+    pauseState = true;
   }
 
   function resumeAll() {
+    pauseState = false;
   }
 
   function restrictVolume(info) {
   }
 
   function browsePlaylist(id, callback) {
+    log.info('browsePlaylist: '+id);
     callback(dataPlaylist);
   }
 
   function getPlayerState() {
-    log.info('return state');
     dataState.elapsedTime = new Date().getSeconds();
     var pauseStateString = 'PLAYING';
     if (pauseState) {
@@ -170,7 +172,8 @@ function SonosApi(log) {
 
   //expose functions
   return {
-    "handleAction":function(options, callback) { handleAction(options, callback) }
+    "handleAction":function(options, callback) { handleAction(options, callback) },
+    "getPlayState":function(){return getPlayerState();}
   };
 
 }

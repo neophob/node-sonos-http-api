@@ -7,7 +7,7 @@ var SonosDiscovery = require('./sonos/sonos.js');
 var HttpAPI = require('./rest/httpapi.js');
 var SonosApi = require('./sonos/sonos-http-api.js');
 var NotificationAPI = require('./notification/notification-service.js');
-var PlayerstateNotification = require('./notification/playerstatenotification.js');
+var PlayerstateNotification = require('./sonos/playerstatenotification.js');
 var discovery = new SonosDiscovery(log);
 var socketioService = new NotificationAPI(conf.get('socket.port'), log);
 
