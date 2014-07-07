@@ -5,7 +5,7 @@ var cache;
 function config () {
 
   return {
-    'log.level': process.env.LOG_LEVEL || 'info',
+    'log.level': process.env.LOG_LEVEL || 'debug',
     'log.Console': process.env.LOG_CONSOLE || true,
     'log.File': process.env.LOG_FILE || '', //specify filename to log to or leave empty.
     'rest.port': process.env.REST_PORT || '5005',

@@ -62,6 +62,7 @@ function SonosApi(discovery, presets, log) {
       var albumUrl = 'http://' + player.address + ':1400' + albumArtUri;
       state.currentTrack.albumArtURI = albumUrl;
     }
+    log.debug(JSON.stringify(state));
     return state;
   }
 
@@ -148,6 +149,7 @@ function SonosApi(discovery, presets, log) {
     var roomName = decodeURIComponent(options.room);
     var player = discovery.getPlayer(roomName);
     if (!player) {
+      log.debug('no player found! exit');
       callback();
       return;
     }
