@@ -3,7 +3,7 @@ var conf = require('./conf');
 var log = require('./lib/log')('sonosserver');
 
 var HttpAPI = require('./rest/httpapi.js');
-var MockSonosApi = require('./rest/mock-http-api.js');
+var MockSonosApi = require('./sonos-virtual/virtual-http-api.js');
 var NotificationAPI = require('./notification/notification-service.js');
 var MockNotification = require('./notification/mocknotification.js');
 var socketioService = new NotificationAPI(conf.get('socket.port'), log);

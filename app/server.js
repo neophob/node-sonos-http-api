@@ -5,7 +5,7 @@ var fs = require('fs');
 
 var SonosDiscovery = require('./sonos/sonos.js');
 var HttpAPI = require('./rest/httpapi.js');
-var SonosApi = require('./rest/sonos-http-api.js');
+var SonosApi = require('./sonos/sonos-http-api.js');
 var NotificationAPI = require('./notification/notification-service.js');
 var PlayerstateNotification = require('./notification/playerstatenotification.js');
 var discovery = new SonosDiscovery(log);

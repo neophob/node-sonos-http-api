@@ -1,6 +1,35 @@
 'use strict';
 
+var fs = require('fs');
+
 function SonosApi(log) {
+
+  var dataState = {};
+  var dataPlaylist = {};
+  var dataZones = {};
+  var assetPath = './assets/';
+
+  fs.readFile(assetPath + 'json/state.json', 'utf8', function (err, data) {
+    if (err) {
+      log.error('Error: ' + err);
+      return;
+    }
+    dataState = JSON.parse(data);
+  });
+  fs.readFile(assetPath + 'json/playlists.json', 'utf8', function (err, data) {
+    if (err) {
+      log.error('Error: ' + err);
+      return;
+    }
+    dataPlaylist = JSON.parse(data);
+  });
+  fs.readFile(assetPath + 'json/zones.json', 'utf8', function (err, data) {
+    if (err) {
+      log.error('Error: ' + err);
+      return;
+    }
+    dataZones = JSON.parse(data);
+  });
 
   // This is to handle setTimeout
   function pauseAll() {
@@ -13,22 +42,18 @@ function SonosApi(log) {
   }
 
   function browsePlaylist(id, callback) {
-    //TODO add playlist json
-    var result = {};
-    callback(result);
+    callback(dataPlaylist);
   }
 
   function getPlayerState() {
-    //TODO add state json
     log.info('return state');
-    var state = {};
-    return state;
+    return dataState;
   }
 
   function handleAction(options, callback) {
     log.debug(options);
     if (options.action === 'zones') {
-      //TODO add zones
+      callback(dataZones);
       return;
     }
 

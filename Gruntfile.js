@@ -113,6 +113,7 @@ module.exports = function (grunt) {
             'notification/*.js',
             'rest/**/*.js',
             'sonos/*.js',
+            'assets/**',
             'server.js'
           ]
         }, {
