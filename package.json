@@ -14,6 +14,18 @@
     "async": "0.2.x",
     "html-entities": "1.0.x"
   },
+  "devDependencies": {
+    "load-grunt-tasks": "~0.4.0",
+    "time-grunt": "~0.3.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compress": "~0.9.1",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-env": "^0.4.1",
+    "grunt-express": "*",
+    "grunt-istanbul": "~0.3.0",
+    "grunt-mocha-test": "~0.11.0"
+  },
   "engine": "node 0.10.x",
   "main": "lib/sonos-http-api.js"
 }

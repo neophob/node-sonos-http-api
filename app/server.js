@@ -4,7 +4,8 @@ var log = require('./lib/log')('sonosserver');
 var fs = require('fs');
 
 var SonosDiscovery = require('./sonos/sonos.js');
-var SonosHttpAPI = require('./rest/sonos-http-api.js');
+var HttpAPI = require('./rest/httpapi.js');
+var SonosApi = require('./rest/sonos-http-api.js');
 var NotificationAPI = require('./notification/notification-service.js');
 var PlayerstateNotification = require('./notification/playerstatenotification.js');
 var discovery = new SonosDiscovery(log);
@@ -18,7 +19,8 @@ fs.exists('./presets.json', function (exists) {
     log.info('loaded presets', presets);
   }
 });
-var sonosHttpAPI = new SonosHttpAPI(discovery, conf.get('rest.ip'), conf.get('rest.port'), presets, log);
+var sonosApi = new SonosApi(discovery, presets, log);
+new HttpAPI(sonosApi, conf.get('rest.ip'), conf.get('rest.port'), presets, log);
 new PlayerstateNotification(discovery, socketioService, conf.get('polling.time'));
 
 process.on('SIGHUP', function() {
