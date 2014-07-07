@@ -16,7 +16,8 @@ module.exports = function (grunt) {
       // configurable paths
       app: 'app',
       dist: 'dist',
-      test: 'test'
+      test: 'test',
+      assets: 'assets'
     },
 
     //env settings
@@ -57,27 +58,6 @@ module.exports = function (grunt) {
         src: ['<%= conf.test %>/integration/*/*.js',
               '<%= conf.test %>/unit/*/*.js'
              ]
-      },
-      //run only unit tests (no need for an external db)
-      //used to: run all tests on jenkins (does not need a postgres db)
-      ci: {
-        src: ['<%= conf.test %>/unit/*/*.js'
-        ],
-        options: {
-          reporter: 'xunit',
-          captureFile: '<%= conf.testtarget %>/test-results.xml'
-        }
-      },
-      //run all tests (integration and unit tests), no cli output but create a testrunner xml file for jenkins
-      //used to: run all tests on the dui server (needs postgres)
-      cd: {
-        src: ['<%= conf.test %>/integration/**/*.js',
-              '<%= conf.test %>/unit/**/*.js'
-             ],
-        options: {
-          reporter: 'xunit',
-          captureFile: '<%= conf.testtarget %>/test-results.xml'
-        }
       }
     },
 
@@ -93,9 +73,6 @@ module.exports = function (grunt) {
             '!<%= conf.dist %>/Procfile'
           ]
         }]
-      },
-      test: {
-        src: ['<%= conf.testtarget %>/*']
       }
     },
 
@@ -113,8 +90,9 @@ module.exports = function (grunt) {
             'notification/*.js',
             'rest/**/*.js',
             'sonos/*.js',
-            'assets/**',
-            'server.js'
+            'sonos-virtual/*.js',
+            'server.js',
+            'virtualserver.js'
           ]
         }, {
           expand: true,
@@ -123,6 +101,15 @@ module.exports = function (grunt) {
           dest: '<%= conf.dist %>',
           src: [
             'package.json'
+          ]
+        }, {
+          expand: true,
+          dot: false,
+          cwd: '<%= conf.assets %>',
+          dest: '<%= conf.dist %>/assets',
+          src: [
+            'img/*',
+            'json/*'
           ]
         }]
       }
