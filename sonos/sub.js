@@ -69,6 +69,7 @@ function Sub(roomName, descriptorUrl, uuid, discovery) {
   var sids = {};
   // for prototype access
   this.discovery = discovery;
+  var log = discovery.log;
   this.address = descriptorUrl.replace(/http:\/\/([\d\.]+).*/, "$1");
   this.roomName = roomName;
   this.zoneType = 0;
@@ -109,7 +110,7 @@ function Sub(roomName, descriptorUrl, uuid, discovery) {
     var saxParser = new EasySax();
 
     saxParser.on('error', function (e) {
-      console.error(e);
+      log.error(e);
     });
 
     var event = {
@@ -183,7 +184,7 @@ function Sub(roomName, descriptorUrl, uuid, discovery) {
         sids[path] = res.headers.sid;
       } else {
         // Some error occured, try to resubscribe
-        console.error("subscribe failed", sids[path], path, res.statusCode);
+        log.error("subscribe failed", sids[path], path, res.statusCode);
         delete sids[path];
         setTimeout(function () { subscribe(path); }, 5000);
       }
@@ -192,7 +193,7 @@ function Sub(roomName, descriptorUrl, uuid, discovery) {
     });
 
     client.on('error', function (e) {
-      console.error(e, sids[path], path);
+      log.error(e, sids[path], path);
       // Keep trying...
       delete sids[path];
       setTimeout(function () { subscribe(path); }, 10000);
@@ -241,7 +242,7 @@ Sub.prototype.soapAction = function (path, action, soap, callback) {
       }},
       function (res) {
         var body = [];
-        console.log(_this.roomName, action, 'STATUS: ' + res.statusCode);
+        log.info(_this.roomName, action, 'STATUS: ' + res.statusCode);
         if (!callback) return;
         if (res.statusCode != 200) {
           callback(false);
@@ -255,7 +256,7 @@ Sub.prototype.soapAction = function (path, action, soap, callback) {
   req.setTimeout(1000);
 
   req.on('error', function(e) {
-    console.error("error occured on soap request", e.message);
+    log.error("error occured on soap request", e.message);
     if (!callback) return;
     callback(false, this);
   });

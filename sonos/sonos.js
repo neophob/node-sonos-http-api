@@ -189,7 +189,7 @@ function Discovery(log) {
 
   function scanDevices() {
     for (var ip in sockets) {
-      log.info("scanning for players in ip", ip);
+      log.debug("scanning for players in ip", ip);
       var socket = sockets[ip];
       socket.send(PLAYER_SEARCH, 0, PLAYER_SEARCH.length, 1900, '239.255.255.250');
       clearTimeout(timeout);
@@ -609,7 +609,7 @@ function Discovery(log) {
   });
 
   eventServer.on('listening', function () {
-    log.info("notification server listening on port", _this.notificationPort);
+    log.info("upnp notification server listening on port", _this.notificationPort);
   });
 
 
