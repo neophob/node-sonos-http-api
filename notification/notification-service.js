@@ -1,7 +1,7 @@
 
 function NotificationApi(port, log) {
   var io = require('socket.io').listen(port);
-  log.info('Start Notification Service on port ' + port);
+  log.info('Start Socket.io notification service on port ' + port);
 
   io.sockets.on('connection', function (socket) {
     log.info('a user connected');
