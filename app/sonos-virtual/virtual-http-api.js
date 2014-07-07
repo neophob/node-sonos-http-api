@@ -13,6 +13,7 @@ function SonosApi(log) {
   var dataPlaylistSQ0 = {};
   var dataPlaylistA = {};
   var dataZones = {};
+  var coverimages = [];
   var assetPath = './assets/';
 
   function loadFile(filename, callback) {
@@ -28,13 +29,6 @@ function SonosApi(log) {
   loadFile('json/state.json', function(data) {
     dataState = data;
   });
-/*  fs.readFile(assetPath + 'json/state.json', 'utf8', function (err, data) {
-    if (err) {
-      log.error('Error: ' + err);
-      return;
-    }
-    dataState = JSON.parse(data);
-  });*/
   loadFile('json/playlists.json', function(data) {
     dataPlaylist = data;
   });
@@ -42,9 +36,24 @@ function SonosApi(log) {
     dataPlaylistFV2 = data;
   });
   loadFile('json/playlistsSQ1.json', function(data) {
+    var items = data.items;
+    var nr = 0;
+    for(var i in items) {
+      var ofs = nr%3;
+      items[i].albumArtURI = 'http://192.168.111.25:5005/img/cover'+ofs+'.jpg';
+      nr++;
+    }
     dataPlaylistSQ1 = data;
   });
   loadFile('json/playlistsSQ0.json', function(data) {
+    var items = data.items;
+    var nr = 0;
+    for(var i in items) {
+      var ofs = nr%3;
+      items[i].albumArtURI = 'http://192.168.111.25:5005/img/cover'+ofs+'.jpg';
+      console.log(items[i].albumArtURI);
+      nr++;
+    }
     dataPlaylistSQ0 = data;
   });
   loadFile('json/playlistsA.json', function(data) {
@@ -53,6 +62,14 @@ function SonosApi(log) {
   loadFile('json/zones.json', function(data) {
     dataZones = data;
   });
+
+  coverimages[0] = fs.readFileSync(assetPath + 'img/cover1.jpg');
+  coverimages[1] = fs.readFileSync(assetPath + 'img/cover2.jpg');
+  coverimages[2] = fs.readFileSync(assetPath + 'img/cover0.jpg');
+
+  //replace album art in playlist
+  //dataPlaylistSQ1.items.forEach(function (
+
 
   // This is to handle setTimeout
   function pauseAll() {
@@ -96,11 +113,22 @@ function SonosApi(log) {
     dataState.zoneState = pauseStateString;
     dataState.playerState = pauseStateString;
     dataState.volume = parseInt(volume, 10);
+    dataState.currentTrack.albumArtURI = 'http://192.168.111.25:5005/img/cover1.jpg';
     return dataState;
   }
 
   function handleAction(options, callback) {
     log.debug(options);
+
+    //room=img, action=aa.jpg, value=undefined
+    if (options.room === 'img' && options.value === undefined) {
+      log.debug('return image');
+      if (options.action === 'cover0.jpg') callback(null, coverimages[0]);
+      if (options.action === 'cover1.jpg') callback(null, coverimages[1]);
+      callback(null, coverimages[2]);
+      return;
+    }
+
     if (options.action === 'zones') {
       callback(dataZones);
       return;

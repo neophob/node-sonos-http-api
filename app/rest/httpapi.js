@@ -5,16 +5,15 @@ var http = require('http');
 function HttpApi(sonosApi, listeningip, port, presets, log) {
 
   var server = http.createServer(function (req, res) {
-    res.writeHead(200, {
-      'Content-Type': 'application/json;charset=utf8',
-      'Cache-Control': 'no-cache',
-	    'Access-Control-Allow-Origin' : '*'
-    });
-
     var params = req.url.substring(1).split('/');
 
     if (params.length < 1 || params[0] === 'favicon.ico') {
       // This is faulty.
+      res.writeHead(200, {
+        'Content-Type': 'application/json;charset=utf8',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin' : '*'
+      });
       res.end();
       return;
     } else if (params.length === 2 && ['preset', 'pauseall', 'resumeall', 'reindex'].some(function (i) { return params[0] === i; })) {
@@ -36,8 +35,16 @@ function HttpApi(sonosApi, listeningip, port, presets, log) {
       }
     }
 
-    var response = sonosApi.handleAction(opt, function (response) {
-      if (response) {
+    var response = sonosApi.handleAction(opt, function (response, img) {
+      if (img) {
+        res.writeHead(200, {'Content-Type': 'image/jpg' });
+        res.end(img, 'binary');
+      } else if (response) {
+        res.writeHead(200, {
+          'Content-Type': 'application/json;charset=utf8',
+          'Cache-Control': 'no-cache',
+          'Access-Control-Allow-Origin' : '*'
+        });
         var jsonResponse = JSON.stringify(response);
         res.write(new Buffer(jsonResponse));
       }
