@@ -8,7 +8,7 @@
  */
 
 var winston = require('winston');
-var conf = require('../conf');
+var conf = require('../conf/index');
 
 var configured = false;
 

@@ -7,10 +7,8 @@ var SonosDiscovery = require('./sonos/sonos.js');
 var SonosHttpAPI = require('./rest/sonos-http-api.js');
 var NotificationAPI = require('./notification/notification-service.js');
 var PlayerstateNotification = require('./notification/playerstatenotification.js');
-
-
 var discovery = new SonosDiscovery(log);
-var notificationApi = new NotificationAPI(conf.get('socket.port'), log);
+var socketioService = new NotificationAPI(conf.get('socket.port'), log);
 
 var presets = {};
 
@@ -21,7 +19,7 @@ fs.exists('./presets.json', function (exists) {
   }
 });
 var sonosHttpAPI = new SonosHttpAPI(discovery, conf.get('rest.ip'), conf.get('rest.port'), presets, log);
-new PlayerstateNotification(discovery, notificationApi, conf.get('polling.time'));
+new PlayerstateNotification(discovery, socketioService, conf.get('polling.time'));
 
 process.on('SIGHUP', function() {
   log.info('SIGHUP, not implemented yet!');
