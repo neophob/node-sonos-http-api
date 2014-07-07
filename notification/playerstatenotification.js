@@ -1,3 +1,4 @@
+var storedState = {};
 
 function PlayerstateNotification(discovery, notificationApi, pollingTime) {
  setInterval(function() {

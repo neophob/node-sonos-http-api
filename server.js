@@ -11,7 +11,6 @@ var discovery = new SonosDiscovery();
 var notificationApi = new NotificationAPI(conf.get('socket.port'), log);
 
 var presets = {};
-var storedState = {};
 
 fs.exists('./presets.json', function (exists) {
   if (exists) {
