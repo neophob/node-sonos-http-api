@@ -2,8 +2,9 @@
 
 var fs = require('fs');
 
-function SonosApi(log) {
+function SonosApi(log, ip, port) {
 
+  var hostaddr = 'http://'+ip+':'+port;
   var pauseState = false;
   var volume = 1;
   var dataState = {};
@@ -38,9 +39,9 @@ function SonosApi(log) {
   loadFile('json/playlistsSQ1.json', function(data) {
     var items = data.items;
     var nr = 0;
-    for(var i in items) {
+    for (var i in items) {
       var ofs = nr%3;
-      items[i].albumArtURI = 'http://192.168.111.25:5005/img/cover'+ofs+'.jpg';
+      items[i].albumArtURI = hostaddr + '/img/cover'+ofs+'.jpg';
       nr++;
     }
     dataPlaylistSQ1 = data;
@@ -48,10 +49,9 @@ function SonosApi(log) {
   loadFile('json/playlistsSQ0.json', function(data) {
     var items = data.items;
     var nr = 0;
-    for(var i in items) {
+    for (var i in items) {
       var ofs = nr%3;
-      items[i].albumArtURI = 'http://192.168.111.25:5005/img/cover'+ofs+'.jpg';
-      console.log(items[i].albumArtURI);
+      items[i].albumArtURI = hostaddr + '/img/cover'+ofs+'.jpg';
       nr++;
     }
     dataPlaylistSQ0 = data;
@@ -63,13 +63,9 @@ function SonosApi(log) {
     dataZones = data;
   });
 
-  coverimages[0] = fs.readFileSync(assetPath + 'img/cover1.jpg');
-  coverimages[1] = fs.readFileSync(assetPath + 'img/cover2.jpg');
-  coverimages[2] = fs.readFileSync(assetPath + 'img/cover0.jpg');
-
-  //replace album art in playlist
-  //dataPlaylistSQ1.items.forEach(function (
-
+  coverimages['cover0.jpg'] = fs.readFileSync(assetPath + 'img/cover0.jpg');
+  coverimages['cover1.jpg'] = fs.readFileSync(assetPath + 'img/cover1.jpg');
+  coverimages['cover2.jpg'] = fs.readFileSync(assetPath + 'img/cover2.jpg');
 
   // This is to handle setTimeout
   function pauseAll() {
@@ -113,7 +109,7 @@ function SonosApi(log) {
     dataState.zoneState = pauseStateString;
     dataState.playerState = pauseStateString;
     dataState.volume = parseInt(volume, 10);
-    dataState.currentTrack.albumArtURI = 'http://192.168.111.25:5005/img/cover1.jpg';
+    dataState.currentTrack.albumArtURI = hostaddr + '/img/cover1.jpg';
     return dataState;
   }
 
@@ -123,9 +119,7 @@ function SonosApi(log) {
     //room=img, action=aa.jpg, value=undefined
     if (options.room === 'img' && options.value === undefined) {
       log.debug('return image');
-      if (options.action === 'cover0.jpg') callback(null, coverimages[0]);
-      if (options.action === 'cover1.jpg') callback(null, coverimages[1]);
-      callback(null, coverimages[2]);
+      callback(null, coverimages[options.action]);
       return;
     }
 
