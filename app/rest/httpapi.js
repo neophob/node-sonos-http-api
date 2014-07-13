@@ -3,6 +3,7 @@
 var http = require('http');
 var optionparser = require('./optionparser');
 
+// TODO: enable CORS only in dev mode
 function HttpApi(sonosApi, listeningip, port, presets, log) {
 
   var server = http.createServer(function (req, res) {
@@ -22,12 +23,15 @@ function HttpApi(sonosApi, listeningip, port, presets, log) {
       if (img) {
         res.writeHead(200, {'Content-Type': 'image/jpg' });
         res.end(img, 'binary');
-      } else if (response) {
+      } else {
         res.writeHead(200, {
           'Content-Type': 'application/json;charset=utf8',
           'Cache-Control': 'no-cache',
           'Access-Control-Allow-Origin' : '*'
         });
+      }
+
+      if (response) {
         var jsonResponse = JSON.stringify(response);
         res.write(new Buffer(jsonResponse));
       }
