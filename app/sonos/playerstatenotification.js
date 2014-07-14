@@ -11,6 +11,8 @@ function PlayerstateNotification(discovery, notificationApi, pollingTime) {
         var albumUrl = 'http://' + playeraddress + ':1400' + albumArtUri;
         state.currentTrack.albumArtURI = albumUrl;
       }
+      //add current roomname, should be inside the coordinator code someday...
+      state.roomname = roomName;
 
       if (storedState[roomName] === undefined) {
         storedState[roomName] = JSON.parse(JSON.stringify(state));
