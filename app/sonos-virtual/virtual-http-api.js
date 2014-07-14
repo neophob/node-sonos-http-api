@@ -36,7 +36,7 @@ function SonosApi(log, ip, port) {
 
   //synchronous read of required files...
   dataStateWohnzimmer = loadJSONFile('json/stateWohnzimmer.json');
-  dataStateKueche = loadJSONFile('json/stateWohnzimmer.json');
+  dataStateKueche = loadJSONFile('json/stateKueche.json');
   dataPlaylist = loadJSONFile('json/playlists.json');
   dataPlaylistFV2 = loadJSONFile('json/playlistsFV2.json');
   dataPlaylistSQ1 = loadJSONFile('json/playlistsSQ1.json');
@@ -85,10 +85,13 @@ function SonosApi(log, ip, port) {
 
   function getPlayerState(name) {
     var dataState;
+    var img;
     if (name === 'Wohnzimmer') {
       dataState = dataStateWohnzimmer;
+      img = '/img/cover1.jpg';
     } else {
       dataState = dataStateKueche;
+      img = '/img/cover2.jpg'
     }
 
     var pauseStateString = 'PAUSED_PLAYBACK';
@@ -99,7 +102,7 @@ function SonosApi(log, ip, port) {
     dataState.zoneState = pauseStateString;
     dataState.playerState = pauseStateString;
     dataState.volume = parseInt(volume, 10);
-    dataState.currentTrack.albumArtURI = hostaddr + '/img/cover1.jpg';
+    dataState.currentTrack.albumArtURI = hostaddr + img;
     return dataState;
   }
 
@@ -179,7 +182,7 @@ function SonosApi(log, ip, port) {
       case 'groupunmute':
         break;
       case 'state':
-        var state = getPlayerState();
+        var state = getPlayerState(options.room);
         callback(state);
         return;
       case 'seek':
@@ -226,8 +229,8 @@ function SonosApi(log, ip, port) {
   //expose functions
   return {
     "handleAction":function(options, callback) { handleAction(options, callback) },
-    "getPlayState":function(){return getPlayerState();},
-    "getZones":function(name){return getZones(name);}
+    "getPlayState":function(name){return getPlayerState(name);},
+    "getZones":function(){return getZones();}
   };
 
 }
