@@ -7,7 +7,8 @@ function SonosApi(log, ip, port) {
   var hostaddr = 'http://'+ip+':'+port;
   var pauseState = false;
   var volume = 1;
-  var dataState = {};
+  var dataStateWohnzimmer = {};
+  var dataStateKueche = {};
   var dataPlaylist = {};
   var dataPlaylistFV2 = {};
   var dataPlaylistSQ1 = {};
@@ -34,7 +35,8 @@ function SonosApi(log, ip, port) {
   }
 
   //synchronous read of required files...
-  dataState = loadJSONFile('json/state.json');
+  dataStateWohnzimmer = loadJSONFile('json/stateWohnzimmer.json');
+  dataStateKueche = loadJSONFile('json/stateWohnzimmer.json');
   dataPlaylist = loadJSONFile('json/playlists.json');
   dataPlaylistFV2 = loadJSONFile('json/playlistsFV2.json');
   dataPlaylistSQ1 = loadJSONFile('json/playlistsSQ1.json');
@@ -42,7 +44,7 @@ function SonosApi(log, ip, port) {
   dataPlaylistSQ0 = loadJSONFile('json/playlistsSQ0.json');
   replaceAlbumArtUri(dataPlaylistSQ0);
   dataPlaylistA = loadJSONFile('json/playlistsA.json');
-  dataZones = loadJSONFile('json/zones.json');
+  dataZones = loadJSONFile('json/zonesTwoZonesWithOnePlayer.json');
 
   coverimages['cover0.jpg'] = fs.readFileSync(assetPath + 'img/cover0.jpg');
   coverimages['cover1.jpg'] = fs.readFileSync(assetPath + 'img/cover1.jpg');
@@ -81,7 +83,14 @@ function SonosApi(log, ip, port) {
     callback(dataPlaylist);
   }
 
-  function getPlayerState() {
+  function getPlayerState(name) {
+    var dataState;
+    if (name === 'Wohnzimmer') {
+      dataState = dataStateWohnzimmer;
+    } else {
+      dataState = dataStateKueche;
+    }
+
     var pauseStateString = 'PAUSED_PLAYBACK';
     if (!pauseState) {
       pauseStateString = 'PLAYING';
@@ -92,6 +101,10 @@ function SonosApi(log, ip, port) {
     dataState.volume = parseInt(volume, 10);
     dataState.currentTrack.albumArtURI = hostaddr + '/img/cover1.jpg';
     return dataState;
+  }
+
+  function getZones() {
+    return dataZones;
   }
 
   function handleAction(options, callback) {
@@ -213,7 +226,8 @@ function SonosApi(log, ip, port) {
   //expose functions
   return {
     "handleAction":function(options, callback) { handleAction(options, callback) },
-    "getPlayState":function(){return getPlayerState();}
+    "getPlayState":function(){return getPlayerState();},
+    "getZones":function(name){return getZones(name);}
   };
 
 }
