@@ -452,7 +452,7 @@ Player.prototype.soapAction = function (path, action, soap, callback) {
   req.setTimeout(1000);
 
   req.on('error', function(e) {
-    log.error("error occured on soap request", e.message);
+    log.error("error occured on soap request", this.address, e.message);
     if (!callback) return;
     callback(false, this);
   });
