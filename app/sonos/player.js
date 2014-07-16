@@ -7,6 +7,7 @@ var http = require('http'),
   EasySax = require('easysax'),
   async = require("async"),
   XmlEntities = require("html-entities").XmlEntities;
+var log = require('../lib/log')('sonosplayer');
 
 function parseMetaDataXML(xml) {
   var result = [];
