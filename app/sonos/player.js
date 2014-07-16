@@ -139,9 +139,8 @@ function Player(roomName, descriptorUrl, uuid, discovery) {
     // LastChange, that is interesting!
 
     var saxParser = new EasySax();
-
     saxParser.on('error', function (e) {
-      console.error(e);
+      log.error('failed to parse notification: ' + e);
     });
 
     var event = {
@@ -198,7 +197,7 @@ function Player(roomName, descriptorUrl, uuid, discovery) {
     if (data.CurrentTrackMetaData) {
       var saxParser = new EasySax();
       saxParser.on('error', function (e) {
-        console.error(e);
+        log.error('failed to parse transport state (CurrentTrackMetaData): '+e);
       });
 
       var nodeValue = "";
@@ -227,7 +226,7 @@ function Player(roomName, descriptorUrl, uuid, discovery) {
     if (data['r:NextTrackMetaData']) {
       var saxParser = new EasySax();
       saxParser.on('error', function (e) {
-        console.error(e);
+        log.error('failed to parse transport state (NextTrackMetaData): '+e);
       });
 
       var nodeValue = "";
@@ -306,7 +305,7 @@ function Player(roomName, descriptorUrl, uuid, discovery) {
       res.setEncoding("utf-8");
 
       res.on('error', function (e) {
-        console.error(e);
+        log.error('failed to parse getPositionInfo: '+e);
       });
 
       res.on('data', function (chunk) {
@@ -333,7 +332,7 @@ function Player(roomName, descriptorUrl, uuid, discovery) {
       });
     });
     req.on("error", function (e) {
-      console.error(e);
+      log.error('failed to parse getPositionInfo: '+e);
     });
     req.write(SOAP.PositionInfo);
     req.end();
@@ -364,7 +363,7 @@ function Player(roomName, descriptorUrl, uuid, discovery) {
         sids[path] = res.headers.sid;
       } else {
         // Some error occured, try to resubscribe
-        console.error("subscribe failed", sids[path], path, res.statusCode);
+        log.error("subscribe failed", sids[path], path, res.statusCode);
         delete sids[path];
         setTimeout(function () { subscribe(path); }, 5000);
       }
@@ -373,7 +372,7 @@ function Player(roomName, descriptorUrl, uuid, discovery) {
     });
 
     client.on('error', function (e) {
-      console.error(e, sids[path], path);
+      log.error('subscribe error: '+e, sids[path], path);
       // Keep trying...
       delete sids[path];
       setTimeout(function () { subscribe(path); }, 10000);
@@ -452,7 +451,7 @@ Player.prototype.soapAction = function (path, action, soap, callback) {
   req.setTimeout(1000);
 
   req.on('error', function(e) {
-    console.error("error occured on soap request", e.message);
+    log.error("error occured on soap request", e.message);
     if (!callback) return;
     callback(false, this);
   });
@@ -698,7 +697,7 @@ Player.prototype.replaceWithFavorite = function (favorite, callback) {
   player.getFavorites(function (success, favorites) {
     favorites.forEach(function (item) {
       if (item.title.toLowerCase() == decodeURIComponent(favorite).toLowerCase()) {
-        console.log("found it", item)
+        log.debug("found it", item);
 
         if (item.uri.startsWith("x-sonosapi-stream:") || item.uri.startsWith("x-sonosapi-radio:") || item.uri.startsWith("pndrradio:")) {
           // This is a radio station, use setAVTransportURI instead.
@@ -710,14 +709,14 @@ Player.prototype.replaceWithFavorite = function (favorite, callback) {
 
         player.removeAllTracksFromQueue(function (success) {
           if (!success) {
-            console.error("error when removing tracks");
+            log.error('error when removing all tracks');
             callback(false);
             return;
           }
 
           player.addURIToQueue(item.uri, item.metaData, function (success) {
             if (!success) {
-              console.error("problem adding URI to queue");
+              log.error('problem adding URI to queue: '+item.uri);
               callback(false);
               return;
             }
@@ -736,7 +735,7 @@ Player.prototype.addPlaylistToQueue = function(playlistURI, callback){
   var player = this;
   player.addURIToQueue(playlistURI, '', function(success){
     if(!success){
-      console.error("problem loading playlist");
+      log.error('problem loading playlist: '+playlistURI);
       callback(false);
       return;
     }
@@ -752,7 +751,7 @@ Player.prototype.replaceQueueWithPlaylist = function(playlistURI, callback){
   var player = this;
   player.removeAllTracksFromQueue(function (success) {
     if (!success) {
-      console.error("error when removing tracks");
+      log.error('error when removing tracks: '+playlistURI);
       callback(false);
       return;
     }
