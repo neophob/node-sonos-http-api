@@ -6,6 +6,7 @@ function SonosApi(log, ip, port) {
 
   var hostaddr = 'http://'+ip+':'+port;
   var pauseState = false;
+  var muteState = false;
   var volume = 1;
   var dataStateWohnzimmer = {};
   var dataStateKueche = {};
@@ -103,6 +104,7 @@ function SonosApi(log, ip, port) {
     dataState.playerState = pauseStateString;
     dataState.volume = parseInt(volume, 10);
     dataState.currentTrack.albumArtURI = hostaddr + img;
+    dataState.mute = muteState;
     return dataState;
   }
 
@@ -174,8 +176,10 @@ function SonosApi(log, ip, port) {
       case 'groupvolume':
         break;
       case 'mute':
+        muteState = true;
         break;
       case 'unmute':
+        muteState = false;
         break;
       case 'groupmute':
         break;
