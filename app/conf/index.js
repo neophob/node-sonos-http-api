@@ -12,7 +12,7 @@ function config () {
     'rest.ip': process.env.REST_IP || '0.0.0.0',
     'socket.port': process.env.SOCKET_PORT || '5006',
     'polling.time': process.env.POLLING || '250',
-    'virtual.sonos.ip': process.env.VIRTUAL_SONOS_IP || '192.168.111.25'
+    'virtual.sonos.ip': process.env.VIRTUAL_SONOS_IP || '127.0.0.1'
   };
 }
 
