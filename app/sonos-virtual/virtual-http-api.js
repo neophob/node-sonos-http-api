@@ -117,7 +117,6 @@ function SonosApi(log, ip, port) {
 
     //room=img, action=aa.jpg, value=undefined
     if (options.room === 'img' && options.value === undefined) {
-      log.debug('return image');
       callback(null, coverimages[options.action]);
       return;
     }
@@ -182,8 +181,10 @@ function SonosApi(log, ip, port) {
         muteState = false;
         break;
       case 'groupmute':
+        muteState = true;
         break;
       case 'groupunmute':
+        muteState = false;
         break;
       case 'state':
         var state = getPlayerState(options.room);
