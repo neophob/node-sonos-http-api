@@ -1,8 +1,9 @@
 'use strict';
 
 var fs = require('fs');
+var log = require('../lib/log')('virtualrest');
 
-function SonosApi(log, ip, port) {
+function SonosApi(ip, port, urlprefix) {
 
   var hostaddr = 'http://'+ip+':'+port;
   var pauseState = false;
@@ -30,7 +31,7 @@ function SonosApi(log, ip, port) {
     var nr = 0;
     for (var i in items) {
       var ofs = nr%3;
-      items[i].albumArtURI = hostaddr + '/img/cover'+ofs+'.jpg';
+      items[i].albumArtURI = urlprefix + '/img/cover'+ofs+'.jpg';
       nr++;
     }
   }
