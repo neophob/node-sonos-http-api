@@ -104,7 +104,7 @@ module.exports = function (grunt) {
           cwd: '<%= conf.assets %>',
           dest: '<%= conf.dist %>/assets',
           src: [
-            'img/*',
+            'images/*',
             'json/*'
           ]
         }]
