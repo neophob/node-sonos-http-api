@@ -3,9 +3,8 @@
 var fs = require('fs');
 var log = require('../lib/log')('virtualrest');
 
-function SonosApi(ip, port, urlprefix) {
+function SonosApi(ip, port) {
 
-  var hostaddr = 'http://'+ip+':'+port;
   var pauseState = false;
   var muteState = false;
   var volume = 1;
@@ -31,7 +30,7 @@ function SonosApi(ip, port, urlprefix) {
     var nr = 0;
     for (var i in items) {
       var ofs = nr%3;
-      items[i].albumArtURI = urlprefix + '/img/cover'+ofs+'.jpg';
+      items[i].albumArtURI = '/images/cover'+ofs+'.jpg';
       nr++;
     }
   }
@@ -48,9 +47,9 @@ function SonosApi(ip, port, urlprefix) {
   dataPlaylistA = loadJSONFile('json/playlistsA.json');
   dataZones = loadJSONFile('json/zonesTwoZonesWithOnePlayer.json');
 
-  coverimages['cover0.jpg'] = fs.readFileSync(assetPath + 'img/cover0.jpg');
-  coverimages['cover1.jpg'] = fs.readFileSync(assetPath + 'img/cover1.jpg');
-  coverimages['cover2.jpg'] = fs.readFileSync(assetPath + 'img/cover2.jpg');
+  coverimages['cover0.jpg'] = fs.readFileSync(assetPath + 'images/cover0.jpg');
+  coverimages['cover1.jpg'] = fs.readFileSync(assetPath + 'images/cover1.jpg');
+  coverimages['cover2.jpg'] = fs.readFileSync(assetPath + 'images/cover2.jpg');
 
   // This is to handle setTimeout
   function pauseAll() {
@@ -90,10 +89,10 @@ function SonosApi(ip, port, urlprefix) {
     var img;
     if (name === 'Wohnzimmer') {
       dataState = dataStateWohnzimmer;
-      img = '/img/cover1.jpg';
+      img = '/images/cover1.jpg';
     } else {
       dataState = dataStateKueche;
-      img = '/img/cover2.jpg'
+      img = '/images/cover2.jpg'
     }
 
     var pauseStateString = 'PAUSED_PLAYBACK';
@@ -104,7 +103,7 @@ function SonosApi(ip, port, urlprefix) {
     dataState.zoneState = pauseStateString;
     dataState.playerState = pauseStateString;
     dataState.volume = parseInt(volume, 10);
-    dataState.currentTrack.albumArtURI = hostaddr + img;
+    dataState.currentTrack.albumArtURI = img;
     dataState.mute = muteState;
     return dataState;
   }
@@ -117,7 +116,7 @@ function SonosApi(ip, port, urlprefix) {
     log.debug(options);
 
     //room=img, action=aa.jpg, value=undefined
-    if (options.room === 'img' && options.value === undefined) {
+    if (options.room === 'images' && options.value === undefined) {
       callback(null, coverimages[options.action]);
       return;
     }

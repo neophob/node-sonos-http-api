@@ -8,7 +8,7 @@ var NotificationAPI = require('./notification/notification-service.js');
 var MockNotification = require('./sonos-virtual/playerstatenotification.js');
 var socketioService = new NotificationAPI(conf.get('socket.port'), log);
 
-var sonosApi = new MockSonosApi(conf.get('virtual.sonos.ip'), conf.get('rest.port'), conf.get('virtual.image.url'));
+var sonosApi = new MockSonosApi(conf.get('virtual.sonos.ip'), conf.get('rest.port'));
 var httpAPI = new HttpAPI(sonosApi, conf.get('rest.ip'), conf.get('rest.port'), {}, log);
 new MockNotification(sonosApi, socketioService, conf.get('polling.time'));
 
