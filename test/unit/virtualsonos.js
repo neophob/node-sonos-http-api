@@ -19,13 +19,12 @@ describe('Check Sonos Virtual Device', function() {
       //GIVEN
       var ip = '1.2.3.4';
       var port = 4444;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
 
       //WHEN
       var result = sonosApi.getPlayState();
 
       //THEN
-      expect(result.currentTrack.albumArtURI).to.contain('http://'+ip+':'+port);
       expect(result.currentTrack.albumArtURI).to.contain('cover');
     });
   });
@@ -35,7 +34,7 @@ describe('Check Sonos Virtual Device', function() {
       //GIVEN
       var ip = '1.2.3.4';
       var port = 4444;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
       var action = optionparser('/WOHNZIMMER/PLAY');
 
       //WHEN
@@ -54,7 +53,7 @@ describe('Check Sonos Virtual Device', function() {
       //GIVEN
       var ip = '1.2.3.4';
       var port = 4444;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
       var action = optionparser('/WOHNZIMMER/PAUSE');
 
       //WHEN
@@ -74,7 +73,7 @@ describe('Check Sonos Virtual Device', function() {
       var ip = '1.2.3.4';
       var port = 4444;
       var volume = 44;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
       var action = optionparser('/WOHNZIMMER/volume/'+volume);
 
       //WHEN
@@ -92,7 +91,7 @@ describe('Check Sonos Virtual Device', function() {
       //GIVEN
       var ip = '1.2.3.4';
       var port = 4444;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
       var action = optionparser('/WOHNZIMMER/favorites');
 
       //WHEN
@@ -110,7 +109,7 @@ describe('Check Sonos Virtual Device', function() {
       //GIVEN
       var ip = '1.2.3.4';
       var port = 4444;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
       var action = optionparser('/WOHNZIMMER/playlists');
 
       //WHEN
@@ -128,7 +127,7 @@ describe('Check Sonos Virtual Device', function() {
       //GIVEN
       var ip = '1.2.3.4';
       var port = 4444;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
       var action = optionparser('/WOHNZIMMER/playlists/SQ:0');
 
       //WHEN
@@ -146,16 +145,14 @@ describe('Check Sonos Virtual Device', function() {
       //GIVEN
       var ip = '1.2.3.4';
       var port = 4444;
-      var sonosApi = new SonosApi(logger, ip, port);
+      var sonosApi = new SonosApi(ip, port);
       var action = optionparser('/images/cover1.jpg');
 
       //WHEN
       sonosApi.handleAction(action, function(res, reply) {
 
         //THEN
-        //expect(reply.length).to.be.at.least(1000);
-        console.log(reply);
-        console.log(res);
+        expect(reply.length).to.be.at.least(1000);
       });
     });
   });
