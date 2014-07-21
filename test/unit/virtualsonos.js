@@ -147,7 +147,7 @@ describe('Check Sonos Virtual Device', function() {
       var ip = '1.2.3.4';
       var port = 4444;
       var sonosApi = new SonosApi(logger, ip, port);
-      var action = optionparser('/img/cover1.jpg');
+      var action = optionparser('/images/cover1.jpg');
 
       //WHEN
       sonosApi.handleAction(action, function(res, reply) {
