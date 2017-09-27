@@ -8,11 +8,12 @@
     "url": "https://github.com/neophob/node-sonos-http-api.git"
   },
   "dependencies": {
-    "socket.io": "^1.0.6",
+    "socket.io": "^2.0.2",
     "winston": "^0.7.3",
     "easysax": "0.1.x",
     "async": "0.2.x",
-    "html-entities": "1.0.x"
+    "html-entities": "1.0.x",
+    "snyk": "^1.41.1"
   },
   "devDependencies": {
     "load-grunt-tasks": "~0.4.0",
@@ -27,5 +28,10 @@
     "chai": "*"
   },
   "engine": "node 0.10.x",
-  "start": "node ./app/server"
+  "start": "node ./app/server",
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
