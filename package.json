@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "socket.io": "^1.0.6",
-    "winston": "^0.7.3",
+    "winston": "^0.8.0",
     "easysax": "0.1.x",
     "async": "0.2.x",
     "html-entities": "1.0.x"
