@@ -8,7 +8,7 @@
     "url": "https://github.com/neophob/node-sonos-http-api.git"
   },
   "dependencies": {
-    "socket.io": "^1.0.6",
+    "socket.io": "^2.0.0",
     "winston": "^0.7.3",
     "easysax": "0.1.x",
     "async": "0.2.x",
